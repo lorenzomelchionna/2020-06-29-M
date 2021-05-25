@@ -1,9 +1,10 @@
 package it.polito.tdp.imdb.model;
 
 public class Director {
-	Integer id;
-	String firstName;
-	String lastName;
+	
+	private Integer id;
+	private String firstName;
+	private String lastName;
 	
 	public Director(Integer id, String firstName, String lastName) {
 		super();

@@ -6,7 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import it.polito.tdp.imdb.model.Actor;
+import it.polito.tdp.imdb.model.Connessione;
 import it.polito.tdp.imdb.model.Director;
 import it.polito.tdp.imdb.model.Movie;
 
@@ -82,11 +86,37 @@ public class ImdbDAO {
 			e.printStackTrace();
 			return null;
 		}
+		
 	}
 	
-	
-	
-	
-	
+	public List<Director> loadDirectors(Map<Integer,Director> idMapD, int year){
+		
+		String sql = "SELECT DISTINCT d.id"
+				+ "FROM movies_directors md, movies m "
+				+ "WHERE m.id = md.movie_id AND m.year = ?";
+		
+		List<Director> result = new ArrayList<>();
+		
+		Connection conn = DBConnect.getConnection();
+		
+		try {
+			
+			PreparedStatement st = conn.prepareStatement(sql);
+			st.setInt(1, year);
+			
+			ResultSet res = st.executeQuery();
+		
+			while(res.next())
+				result.add(idMapD.get(res.getInt("d.id")));
+			
+			conn.close();
+			return result;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
 	
 }
