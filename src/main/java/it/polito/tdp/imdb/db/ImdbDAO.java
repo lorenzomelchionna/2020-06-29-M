@@ -65,33 +65,34 @@ public class ImdbDAO {
 	}
 	
 	
-	public List<Director> listAllDirectors(){
+	public void listAllDirectors(Map<Integer,Director> idMapD){
+		
 		String sql = "SELECT * FROM directors";
-		List<Director> result = new ArrayList<Director>();
+		
 		Connection conn = DBConnect.getConnection();
 
 		try {
 			PreparedStatement st = conn.prepareStatement(sql);
 			ResultSet res = st.executeQuery();
+			
 			while (res.next()) {
 
 				Director director = new Director(res.getInt("id"), res.getString("first_name"), res.getString("last_name"));
 				
-				result.add(director);
+				idMapD.put(director.getId(), director);
+				
 			}
 			conn.close();
-			return result;
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return null;
 		}
 		
 	}
 	
 	public List<Director> loadDirectors(Map<Integer,Director> idMapD, int year){
 		
-		String sql = "SELECT DISTINCT d.id"
+		String sql = "SELECT DISTINCT md.director_id AS id "
 				+ "FROM movies_directors md, movies m "
 				+ "WHERE m.id = md.movie_id AND m.year = ?";
 		
@@ -107,9 +108,46 @@ public class ImdbDAO {
 			ResultSet res = st.executeQuery();
 		
 			while(res.next())
-				result.add(idMapD.get(res.getInt("d.id")));
+				result.add(idMapD.get(res.getInt("id")));
 			
 			conn.close();
+			return result;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+	
+	public List<Connessione> loadConnessioni(Map<Integer,Director> idMapD, Set<Director> vertexSet){
+		
+		String sql = "SELECT md1.director_id AS id1, md2.director_id AS id2, COUNT(r.actor_id) AS cnt "
+				+ "FROM movies_directors md1, movies_directors md2, roles r "
+				+ "WHERE md1.movie_id = md2.movie_id AND md1.director_id != md2.director_id AND md1.movie_id = r.movie_id "
+				+ "GROUP BY md1.director_id, md2.director_id";
+		
+		List<Connessione> result = new ArrayList<>();
+		
+		Connection conn = DBConnect.getConnection();
+		
+		try {
+			
+			PreparedStatement st = conn.prepareStatement(sql);
+			
+			ResultSet rs = st.executeQuery();
+			
+			while(rs.next()) {
+				
+				Connessione c = new Connessione(idMapD.get(rs.getInt("id1")),idMapD.get(rs.getInt("id2")),rs.getInt("cnt"));
+				
+				if(vertexSet.contains(c.getD1()) && vertexSet.contains(c.getD2()))
+					result.add(c);
+				
+			}
+			
+			conn.close();
+			
 			return result;
 			
 		} catch (SQLException e) {

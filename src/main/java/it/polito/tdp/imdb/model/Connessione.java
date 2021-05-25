@@ -2,29 +2,39 @@ package it.polito.tdp.imdb.model;
 
 public class Connessione {
 
-	int da;
-	int db;
+	private Director d1;
+	private Director d2;
+	private int weight;
 	
-	public Connessione(int da, int db) {
+	public Connessione(Director d1, Director d2, int weight) {
 		super();
-		this.da = da;
-		this.db = db;
+		this.d1 = d1;
+		this.d2 = d2;
+		this.weight = weight;
 	}
-	
-	public int getDa() {
-		return da;
+
+	public Director getD1() {
+		return d1;
 	}
-	
-	public void setDa(int da) {
-		this.da = da;
+
+	public void setD1(Director d1) {
+		this.d1 = d1;
 	}
-	
-	public int getDb() {
-		return db;
+
+	public Director getD2() {
+		return d2;
 	}
-	
-	public void setDb(int db) {
-		this.db = db;
+
+	public void setD2(Director d2) {
+		this.d2 = d2;
+	}
+
+	public int getWeight() {
+		return weight;
+	}
+
+	public void setWeight(int weight) {
+		this.weight = weight;
 	}
 	
 }
