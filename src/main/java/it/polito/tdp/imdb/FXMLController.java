@@ -7,6 +7,7 @@ package it.polito.tdp.imdb;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.imdb.model.Director;
 import it.polito.tdp.imdb.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,10 +36,10 @@ public class FXMLController {
     private Button btnCercaAffini; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxAnno"
-    private ComboBox<?> boxAnno; // Value injected by FXMLLoader
+    private ComboBox<Integer> boxAnno; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxRegista"
-    private ComboBox<?> boxRegista; // Value injected by FXMLLoader
+    private ComboBox<Director> boxRegista; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtAttoriCondivisi"
     private TextField txtAttoriCondivisi; // Value injected by FXMLLoader
@@ -49,11 +50,36 @@ public class FXMLController {
     @FXML
     void doCreaGrafo(ActionEvent event) {
 
+    	if(boxAnno.getValue() == null) {
+    		txtResult.appendText("Nessun anno selezionato!\n");
+    		return;
+    	}
+    	
+    	model.creaGrafo(boxAnno.getValue());
+    	
+    	boxRegista.getItems().addAll(model.allDirectors());
+    	
     }
 
     @FXML
     void doRegistiAdiacenti(ActionEvent event) {
-
+    	
+    	if(boxRegista.getValue() == null) {
+    		txtResult.appendText("Nessun regista selezionato!\n");
+    		return;
+    	}
+    	
+    	if(model.adiacentDirectors(boxRegista.getValue()).size() == 0) {
+    		txtResult.appendText("Nessun regista adiacente!\n");
+    		return;
+    	}
+    	
+    	txtResult.appendText("Registi adiacenti: \n");
+    	
+    	for(Director d : model.adiacentDirectors(boxRegista.getValue())) {
+    		txtResult.appendText(d.toString()+"\n");
+    	}
+    	
     }
 
     @FXML
@@ -76,6 +102,8 @@ public class FXMLController {
    public void setModel(Model model) {
     	
     	this.model = model;
+    	
+    	boxAnno.getItems().addAll(2004,2005,2006);
     	
     }
     

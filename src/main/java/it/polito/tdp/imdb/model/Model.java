@@ -1,6 +1,9 @@
 package it.polito.tdp.imdb.model;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jgrapht.Graphs;
@@ -46,6 +49,24 @@ public class Model {
 		
 		System.out.println("#Verici: "+grafo.vertexSet().size());
 		System.out.println("#Archi: "+grafo.edgeSet().size());
+		
+	}
+	
+	public List<Director> allDirectors(){
+		
+		List<Director> result = new ArrayList<>();
+		
+		for(Director d : grafo.vertexSet()) {
+			result.add(d);
+		}
+		
+		return result;
+		
+	}
+	
+	public List<Director> adiacentDirectors(Director d){
+		
+		return Graphs.neighborListOf(grafo, d);
 		
 	}
 

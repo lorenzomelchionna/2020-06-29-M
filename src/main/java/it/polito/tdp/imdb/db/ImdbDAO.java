@@ -124,8 +124,8 @@ public class ImdbDAO {
 		
 		String sql = "SELECT md1.director_id AS id1, md2.director_id AS id2, COUNT(r.actor_id) AS cnt "
 				+ "FROM movies_directors md1, movies_directors md2, roles r "
-				+ "WHERE md1.movie_id = md2.movie_id AND md1.director_id != md2.director_id AND md1.movie_id = r.movie_id "
-				+ "GROUP BY md1.director_id, md2.director_id";
+				+ "WHERE (md1.movie_id = md2.movie_id AND md1.director_id != md2.director_id AND md1.movie_id = r.movie_id) OR (md1.director_id != md2.director_id AND md1.movie_id != md2.movie_id AND (md1.movie_id = r.movie_id AND md2.movie_id = r.movie_id)) "
+				+ "GROUP BY md1.director_id, md2.director_id ";
 		
 		List<Connessione> result = new ArrayList<>();
 		
