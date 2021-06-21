@@ -122,10 +122,11 @@ public class ImdbDAO {
 	
 	public List<Connessione> loadConnessioni(Map<Integer,Director> idMapD, Set<Director> vertexSet){
 		
-		String sql = "SELECT md1.director_id AS id1, md2.director_id AS id2, COUNT(r.actor_id) AS cnt "
-				+ "FROM movies_directors md1, movies_directors md2, roles r "
-				+ "WHERE (md1.movie_id = md2.movie_id AND md1.director_id != md2.director_id AND md1.movie_id = r.movie_id) OR (md1.director_id != md2.director_id AND md1.movie_id != md2.movie_id AND (md1.movie_id = r.movie_id AND md2.movie_id = r.movie_id)) "
-				+ "GROUP BY md1.director_id, md2.director_id ";
+		String sql = "SELECT md1.director_id AS id1, md2.director_id AS id2, COUNT(r1.actor_id) AS cnt "
+				+ "FROM movies_directors md1, movies_directors md2, movies m1, movies m2, roles r1, roles r2 "
+				+ "WHERE md1.director_id != md2.director_id AND m1.id = md1.movie_id AND m2.id = md2.movie_id "
+				+ "	AND m1.year = 2005 AND m2.year = 2005 AND m1.id = r1.movie_id AND m2.id = r2.movie_id AND r1.actor_id = r2.actor_id "
+				+ "GROUP BY md1.director_id, md2.director_id";
 		
 		List<Connessione> result = new ArrayList<>();
 		
